@@ -7,14 +7,15 @@ import {DataService} from './data.service';
 @Component({
     selector: 'listGroups',
     template: 
-    `<div class="groupList">
+    `
+    <div class="groupList">
         <h1>List of groups</h1>
         <div *ngFor="let group of groupItems">
             <a role="button" (click)="showSubgroups(group.id)">{{group.name}}</a>
             <p *ngIf ="showSub[group.id]"> 
                 <a *ngFor="let subgroup of subgroupItems">
                     <p class="subgroups" *ngIf =" subgroup.group.id == group.id && showSub[group.id] == true">
-                        <a>{{subgroup.name}}</a>
+                        <a role="button" (click)="transferSubgroupToEditPanel(subgroup.id)">{{subgroup.name}}</a>
                     </p>
                 </a>
             </p>
@@ -26,6 +27,7 @@ import {DataService} from './data.service';
         <button class="btn btn-sm btn-norm" (click)="showSubgroups(p)">&#9776;</button>
     </div>
     <div class="editPanel">
+    <h1>Edit panel</h1>
         <p>
             <input type="name" class="form-control" [(ngModel)]="name" placeholder="Name" />
         </p>
@@ -34,7 +36,7 @@ import {DataService} from './data.service';
         </p>
         <p>
             <button class="btn btn-deleteGroup" >Delete</button>
-            <button class="btn btn-saveGroup" (click)="saveGroup(name, description)">Save</button>
+            <button class="btn btn-saveGroup" (click)="saveObject(name, description)">Save</button>
             <button class="btn btn-addGroup" (click)="addGroup(name, description)">Add</button>
         </p>
     </div>
@@ -43,7 +45,7 @@ import {DataService} from './data.service';
             p,div{font-size:23px; font-family:Verdana;}
             .subgroups{font-size:20px; padding-left: 15px; }
             .groupList{float: left;}
-            .editPanel{float: left; margin: 80px; }
+            .editPanel{float: left; margin-left: 200px; background-color: #fff; }
             input{font-size:20px;}
             button{font-size:20px; margin-right: 10px;}
     `],
@@ -55,9 +57,10 @@ export class ListGroupsComponent implements OnInit {
     groupItems: Group[] = [];
     subgroupItems: Subgroup[] = [];
     groupCurrentId: number;
-    subgroupCurrent: number;
+    subgroupCurrentId: number;
     name: string;
     description: string;
+    editingObject: string;
 
     constructor(private dataService: DataService){}
      
@@ -81,24 +84,34 @@ export class ListGroupsComponent implements OnInit {
         else{
             alert("Group with this name already exists");
         }
-       
     }
 
-    saveGroup(name: string, description: string){
-        
+    saveObject(name: string, description: string){
         if(name !="" && description != ""){
-            this.groupItems[this.groupCurrentId].name = name;
-            this.groupItems[this.groupCurrentId].description = description;
-        }
+            if(this.editingObject == "group"){
+                this.groupItems[this.groupCurrentId].name = name;
+                this.groupItems[this.groupCurrentId].description = description;
+            }
+            else if(this.editingObject == "subgroup"){
+                this.subgroupItems[this.subgroupCurrentId].name = name;
+                this.subgroupItems[this.subgroupCurrentId].description = description;
+            }
+        } 
         else{
-            alert("Group with this name already exists");
+            alert("Fill all fields");
         }
     }
 
     transferGroupToEditPanel(groupId: number){
-        let currentGroup: Group;
-        currentGroup = this.groupItems.find(o => o.id == groupId);
-        this.name = currentGroup.name;
-        this.description = currentGroup.description;
+        this.editingObject = "group";
+        this.name = this.groupItems[groupId].name;
+        this.description = this.groupItems[groupId].description;
+    }
+
+    transferSubgroupToEditPanel(subgroupId: number){
+        this.subgroupCurrentId = subgroupId;
+        this.editingObject = "subgroup";
+        this.name = this.subgroupItems[subgroupId].name;
+        this.description = this.subgroupItems[subgroupId].description;
     }
 }

@@ -12,15 +12,15 @@ export class DataService{
     ];
      
     private dataSubgroup: Subgroup[] = [
-        {id: 0, name:'subgroup1', description: 'descriptionGroup1', group: this.dataGroup[0]},
-        {id: 1, name:'subgroup2', description: 'descriptionGroup2', group: this.dataGroup[0]},
-        {id: 2, name:'subgroup3', description: 'descriptionGroup3', group: this.dataGroup[0]},
-        {id: 3, name:'subgroup4', description: 'descriptionGroup4', group: this.dataGroup[1]},
-        {id: 4, name:'subgroup5', description: 'descriptionGroup5', group: this.dataGroup[1]},
-        {id: 5, name:'subgroup6', description: 'descriptionGroup6', group: this.dataGroup[1]},
-        {id: 6, name:'subgroup7', description: 'descriptionGroup7', group: this.dataGroup[2]},
-        {id: 7, name:'subgroup8', description: 'descriptionGroup8', group: this.dataGroup[2]},
-        {id: 8, name:'subgroup9', description: 'descriptionGroup9', group: this.dataGroup[2]}
+        {id: 0, name:'subgroup1', description: 'descriptionSubgroup1', group: this.dataGroup[0]},
+        {id: 1, name:'subgroup2', description: 'descriptionSubgroup2', group: this.dataGroup[0]},
+        {id: 2, name:'subgroup3', description: 'descriptionSubgroup3', group: this.dataGroup[0]},
+        {id: 3, name:'subgroup4', description: 'descriptionSubgroup4', group: this.dataGroup[1]},
+        {id: 4, name:'subgroup5', description: 'descriptionSubgroup5', group: this.dataGroup[1]},
+        {id: 5, name:'subgroup6', description: 'descriptionSubgroup6', group: this.dataGroup[1]},
+        {id: 6, name:'subgroup7', description: 'descriptionSubgroup7', group: this.dataGroup[2]},
+        {id: 7, name:'subgroup8', description: 'descriptionSubgroup8', group: this.dataGroup[2]},
+        {id: 8, name:'subgroup9', description: 'descriptionSubgroup9', group: this.dataGroup[2]}
     ];
 
     getDataGroup(): Group[] {
