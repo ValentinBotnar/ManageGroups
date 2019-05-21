@@ -33,7 +33,9 @@ import {DataService} from './data.service';
             <input type="description" class="form-control" [(ngModel)]="description" placeholder="Description" />
         </p>
         <p>
-            <button class="btn btn-addGroup" (click)="addGroup(name, description)">Save</button>
+            <button class="btn btn-deleteGroup" >Delete</button>
+            <button class="btn btn-saveGroup" (click)="saveGroup(name, description)">Save</button>
+            <button class="btn btn-addGroup" (click)="addGroup(name, description)">Add</button>
         </p>
     </div>
     `,
@@ -43,7 +45,7 @@ import {DataService} from './data.service';
             .groupList{float: left;}
             .editPanel{float: left; margin: 80px; }
             input{font-size:20px;}
-            button{font-size:20px;}
+            button{font-size:20px; margin-right: 10px;}
     `],
     providers: [DataService]
 })
@@ -52,9 +54,10 @@ export class ListGroupsComponent implements OnInit {
     showSub: boolean[] = [false];
     groupItems: Group[] = [];
     subgroupItems: Subgroup[] = [];
-    groupCurrent: number;
+    groupCurrentId: number;
     subgroupCurrent: number;
-
+    name: string;
+    description: string;
 
     constructor(private dataService: DataService){}
      
@@ -65,15 +68,37 @@ export class ListGroupsComponent implements OnInit {
 
     showSubgroups(groupId: number){
         this.showSub[groupId] = !this.showSub[groupId];
-        this.groupCurrent = groupId;
+        this.groupCurrentId = groupId;
+        
+        this.transferGroupToEditPanel(groupId);
     }
 
     addGroup(name: string, description: string){
-         
-        this.dataService.addDataGroup(name, description);
+        let currentGroup = this.groupItems.find(o => o.name == name);
+        if(!currentGroup){
+            this.dataService.addDataGroup(name, description);
+        }
+        else{
+            alert("Group with this name already exists");
+        }
+       
     }
 
-    transferGroupToEditPanel(){
-        //return Group[groupId];
+    saveGroup(name: string, description: string){
+        
+        if(name !="" && description != ""){
+            this.groupItems[this.groupCurrentId].name = name;
+            this.groupItems[this.groupCurrentId].description = description;
+        }
+        else{
+            alert("Group with this name already exists");
+        }
+    }
+
+    transferGroupToEditPanel(groupId: number){
+        let currentGroup: Group;
+        currentGroup = this.groupItems.find(o => o.id == groupId);
+        this.name = currentGroup.name;
+        this.description = currentGroup.description;
     }
 }
