@@ -84,12 +84,11 @@ export class ListGroupsComponent implements OnInit {
         if(name !="" && description != ""){
             if(this.editingObject == "group"){
                 let currentGroup = this.groupItems.find(o => o.name == name);
-                let subgroups: Subgroup[];
+                let subgroups: Subgroup[] = [];
                 if(!currentGroup){
                     this.dataService.addDataGroup(name, description, subgroups);
                 }
                 else{
-                    alert("Group with this name already exists");
                 }
             }
             else if(this.editingObject == "createGroup"){
@@ -116,15 +115,7 @@ export class ListGroupsComponent implements OnInit {
         this.groupCurrentId = groupId;
     }
 
-    addSubgroup(name: string, description: string){
-        let currentSubgroup = this.subgroupItems.find(o => o.name == name);
-        if(!currentSubgroup){
-            this.dataService.addDataSubgroup(name, description, this.groupItems[this.groupCurrentId]);
-        }
-        else{
-            alert("Subgroup with this name already exists");
-        }
-    }
+  
 
     saveObject(name: string, description: string){
         if(name !="" && description != ""){
