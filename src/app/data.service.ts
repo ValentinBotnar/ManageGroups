@@ -36,7 +36,10 @@ export class DataService{
     }
 
     addDataSubgroup(name: string, description: string, group: Group){
-      
-        this.dataSubgroup.push(new Subgroup(Math.random(), name, description, group));
+        let subgroup = new Subgroup(Math.random(), name, description, group);
+        this.dataSubgroup.push(subgroup);
+        let groupTemp = this.dataGroup.find(o => o.name == name);
+        let numberGroupInArray = this.dataGroup.indexOf(groupTemp);
+        this.dataGroup[numberGroupInArray].subgroups.push(subgroup);
     }
 }

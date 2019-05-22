@@ -12,6 +12,7 @@ import {DataService} from './data.service';
         <h1>List of groups</h1>
         <div *ngFor="let group of groupItems">
             <a role="button" (click)="showSubgroups(group.id)">{{group.name}}</a>
+            <button class="btn btn-addSubgroup" (click)="prepareforAddingSubgroup(group.id)">&#x2b;</button>
             <p *ngIf ="showSub[group.id]"> 
                 <a *ngFor="let subgroup of subgroupItems">
                     <p class="subgroups" *ngIf =" subgroup.group.id == group.id && showSub[group.id] == true">
@@ -28,6 +29,7 @@ import {DataService} from './data.service';
     </div>
     <div class="editPanel">
     <h1>Edit panel</h1>
+        {{textOnEditingPanel}}
         <p>
             <input type="name" class="form-control" [(ngModel)]="name" placeholder="Name" />
         </p>
@@ -37,7 +39,7 @@ import {DataService} from './data.service';
         <p>
             <button class="btn btn-deleteGroup" >Delete</button>
             <button class="btn btn-saveGroup" (click)="saveObject(name, description)">Save</button>
-            <button class="btn btn-addGroup" (click)="addGroup(name, description)">Add</button>
+            <button class="btn btn-addGroup" (click)="add(name, description)">Add</button>
         </p>
     </div>
     `,
@@ -48,6 +50,8 @@ import {DataService} from './data.service';
             .editPanel{float: left; margin-left: 200px; background-color: #fff; }
             input{font-size:20px;}
             button{font-size:20px; margin-right: 10px;}
+            .btn-addSubgroup{margin-left:10px;}
+            .checkbox{font-size: 16px;}
     `],
     providers: [DataService]
 })
@@ -61,7 +65,7 @@ export class ListGroupsComponent implements OnInit {
     name: string;
     description: string;
     editingObject: string;
-
+    textOnEditingPanel: string;
     constructor(private dataService: DataService){}
      
     ngOnInit(){
@@ -76,23 +80,49 @@ export class ListGroupsComponent implements OnInit {
         this.transferGroupToEditPanel(groupId);
     }
 
-    addGroup(name: string, description: string, subgroups: Subgroup[]){
-        let currentGroup = this.groupItems.find(o => o.name == name);
-        if(!currentGroup){
-            this.dataService.addDataGroup(name, description, subgroups);
+    add(name: string, description: string){
+        if(name !="" && description != ""){
+            if(this.editingObject == "group"){
+                let currentGroup = this.groupItems.find(o => o.name == name);
+                let subgroups: Subgroup[];
+                if(!currentGroup){
+                    this.dataService.addDataGroup(name, description, subgroups);
+                }
+                else{
+                    alert("Group with this name already exists");
+                }
+            }
+            else if(this.editingObject == "createGroup"){
+                let currentSubgroup = this.subgroupItems.find(o => o.name == name);
+                if(!currentSubgroup){
+                    this.dataService.addDataSubgroup(name, description, this.groupItems.find(o => o.id == this.groupCurrentId))
+                }
+                else{
+                    alert("Subgroup with this name already exists");
+                }
+            }
         }
         else{
-            alert("Group with this name already exists");
+            alert("Fill all fields");
         }
     }
 
-    addSubgroup(name: string, description: string, group: Group){
+    prepareforAddingSubgroup(groupId: number){
+        this.textOnEditingPanel = "Create subgroups for " + this.groupItems[groupId].name;
+        this.name = "";
+        this.description = "";
+
+        this.editingObject = "createGroup";
+        this.groupCurrentId = groupId;
+    }
+
+    addSubgroup(name: string, description: string){
         let currentSubgroup = this.subgroupItems.find(o => o.name == name);
         if(!currentSubgroup){
-            this.dataService.addDataSubgroup(name, description, group);
+            this.dataService.addDataSubgroup(name, description, this.groupItems[this.groupCurrentId]);
         }
         else{
-            alert("Group with this name already exists");
+            alert("Subgroup with this name already exists");
         }
     }
 
@@ -116,6 +146,7 @@ export class ListGroupsComponent implements OnInit {
         this.editingObject = "group";
         this.name = this.groupItems[groupId].name;
         this.description = this.groupItems[groupId].description;
+        this.textOnEditingPanel = "";
     }
 
     transferSubgroupToEditPanel(subgroupId: number){
@@ -123,5 +154,6 @@ export class ListGroupsComponent implements OnInit {
         this.editingObject = "subgroup";
         this.name = this.subgroupItems[subgroupId].name;
         this.description = this.subgroupItems[subgroupId].description;
+        this.textOnEditingPanel = "";
     }
 }
