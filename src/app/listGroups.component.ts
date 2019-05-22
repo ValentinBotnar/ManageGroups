@@ -76,10 +76,20 @@ export class ListGroupsComponent implements OnInit {
         this.transferGroupToEditPanel(groupId);
     }
 
-    addGroup(name: string, description: string){
+    addGroup(name: string, description: string, subgroups: Subgroup[]){
         let currentGroup = this.groupItems.find(o => o.name == name);
         if(!currentGroup){
-            this.dataService.addDataGroup(name, description);
+            this.dataService.addDataGroup(name, description, subgroups);
+        }
+        else{
+            alert("Group with this name already exists");
+        }
+    }
+
+    addSubgroup(name: string, description: string, group: Group){
+        let currentSubgroup = this.subgroupItems.find(o => o.name == name);
+        if(!currentSubgroup){
+            this.dataService.addDataSubgroup(name, description, group);
         }
         else{
             alert("Group with this name already exists");

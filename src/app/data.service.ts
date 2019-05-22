@@ -6,9 +6,9 @@ import {Subgroup} from './classes/subgroup';
 export class DataService{
 
     private dataGroup: Group[] = [
-        { id: 0, name:'group1', description: 'descriptionGroup1'},
-        { id: 1, name:'group2', description: 'descriptionGroup2'},
-        { id: 2, name:'group3', description: 'descriptionGroup3'}
+        { id: 0, name:'group1', description: 'descriptionGroup1', subgroups: Subgroup[Subgroup[0], Subgroup[1], Subgroup[2]]},
+        { id: 1, name:'group2', description: 'descriptionGroup2', subgroups: Subgroup[Subgroup[3], Subgroup[4], Subgroup[5]]},
+        { id: 2, name:'group3', description: 'descriptionGroup3', subgroups: Subgroup[Subgroup[6], Subgroup[7], Subgroup[8]]}
     ];
      
     private dataSubgroup: Subgroup[] = [
@@ -30,8 +30,13 @@ export class DataService{
         return this.dataSubgroup;
     }
 
-    addDataGroup(name: string, description: string){
+    addDataGroup(name: string, description: string, subgroups: Subgroup[]){
       
-        this.dataGroup.push(new Group(Math.random(), name, description));
+        this.dataGroup.push(new Group(Math.random(), name, description, subgroups));
+    }
+
+    addDataSubgroup(name: string, description: string, group: Group){
+      
+        this.dataSubgroup.push(new Subgroup(Math.random(), name, description, group));
     }
 }
